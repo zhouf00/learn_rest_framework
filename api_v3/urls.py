@@ -8,4 +8,6 @@ urlpatterns = [
     url(r'^publish/$', views.Publish.as_view()),
     url(r'^publish/(?P<pk>.*)/$', views.Publish.as_view()),
 
+    url(r'^v2/books/$', views.V2Book.as_view()),
+    url(r'^v2/books/(?P<pk>.*)/$', views.V2Book.as_view()),
 ]

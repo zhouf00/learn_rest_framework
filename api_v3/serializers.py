@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-
+from rest_framework.exceptions import ValidationError
 from . import models
 
 
@@ -33,3 +33,91 @@ class BookModelSerializer(ModelSerializer):
         # exclude = ['id']
         # 自动连表深度
         # depth = 1
+
+
+class BookModelDeserializer(ModelSerializer):
+    class Meta:
+        model = models.Book
+        fields = ['name','price', 'img', 'publish', 'authors']
+        # extra_kwargs用来完成反序列化字段的系统校验规则
+        extra_kwargs = {
+            'name': {
+                'required': True,
+                'min_length':1,
+                'error_messages': {
+                    'required': '必填项',
+                    'min_length': '太短了'
+                }
+            }
+        }
+
+    # 局部钩子
+    def validate_name(self, value):
+        # 书名不能包含 g 字符
+        if 'g' in value.lower():
+            raise ValidationError('该《%s》书不能出版'%value)
+        return value
+
+    # 全局钩子
+    def validate(self, attrs):
+        publish = attrs.get('publish')
+        name = attrs.get('name')
+        if models.Book.objects.filter(name=name, publish=publish):
+            raise ValidationError({'book': '该书名已存在'})
+        return attrs
+
+
+    # ModelSerializer类已经帮我们实现了 create与update方法
+
+
+""""
+1 fields中设置悵经与反序列化字段
+2 extra_kwargs划分只序列化或只反序列化字段
+    write_only：只反序列化
+    read_only：只序列化
+    自定义字段默认只序列化(read_only)
+3 设置反序列化所需的系统、局部钩子、全局钩子等校验规则
+"""
+class V2BookModelSerializer(ModelSerializer):
+
+    class Meta:
+        # 序列化类关联的model类
+        model = models.Book
+        # 参与序列化的字段
+        fields = ['name','price','publish_name', 'img', 'author_list', 'publish_name', 'publish', 'authors']
+
+        extra_kwargs = {
+            'name': {
+                'required': True,
+                'min_length': 2,
+                'error_messages': {
+                    'required': '必填项',
+                    'min_length': '太短了'
+                }
+            },
+            'publish': {
+                'write_only': True
+            },
+            'authors': {
+                'write_only': True
+            },
+            'img': {
+                'read_only': True
+            },
+
+        }
+
+    # 局部钩子
+    def validate_name(self, value):
+        # 书名不能包含 g 字符
+        if 'g' in value.lower():
+            raise ValidationError('该《%s》书不能出版'%value)
+        return value
+
+    # 全局钩子
+    def validate(self, attrs):
+        publish = attrs.get('publish')
+        name = attrs.get('name')
+        if models.Book.objects.filter(name=name, publish=publish):
+            raise ValidationError({'book': '该书名已存在'})
+        return attrs
