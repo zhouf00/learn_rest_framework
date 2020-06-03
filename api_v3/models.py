@@ -35,6 +35,13 @@ class Book(BaseModel):
         db_constraint=False,
         related_name='books'
     )
+    @property
+    def publish_name(self):
+        return self.publish.name
+
+    @property
+    def author_list(self):
+        return self.authors.values('name', 'age', 'detail__mobile').all()
 
     class Meta:
         db_table = 'v3_book'
