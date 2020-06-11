@@ -107,6 +107,7 @@ class V2Book(APIView):
     def post(self, request, *args, **kwargs):
 
         request_data = request.data
+        print(request_data)
         if isinstance(request_data, dict):
             print('单增')
             many = False

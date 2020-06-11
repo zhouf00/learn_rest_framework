@@ -42,7 +42,10 @@ INSTALLED_APPS = [
     # 自定义
     'api.apps.ApiConfig',
     'api_v2.apps.ApiV2Config',
-    'api_v3.apps.ApiV3Config'
+    'api_v3.apps.ApiV3Config',
+    'api_v4.apps.ApiV4Config',
+    'api_v5.apps.ApiV5Config',
+
 ]
 
 MIDDLEWARE = [
@@ -145,5 +148,6 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser'
     ],
     # 全局配置异常模块
-    'EXCEPTION_HANDLER': 'api_v2.exception.exception_handler',
+    'EXCEPTION_HANDLER': 'utils.exception.exception_handler',
 }
+

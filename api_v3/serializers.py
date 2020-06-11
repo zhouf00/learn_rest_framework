@@ -100,7 +100,7 @@ class V2BookModelSerializer(ModelSerializer):
         model = models.Book
         # 参与序列化的字段
         fields = ['name','price','publish_name', 'img', 'author_list', 'publish_name', 'publish', 'authors']
-        # 群改，需要设置自定义ListSerializer，重写尹改updata方法
+        # 群改，需要设置自定义ListSerializer，重写修改updata方法
         list_serializer_class = V2BookListSerializer
 
         extra_kwargs = {

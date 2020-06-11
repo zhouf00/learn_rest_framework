@@ -24,6 +24,9 @@ urlpatterns = [
     url(r'^api/', include('api.urls')),
     url(r'^apiv2/', include('api_v2.urls')),
     url(r'^apiv3/', include('api_v3.urls')),
+    url(r'^apiv4/', include('api_v4.urls')),
+    url(r'^apiv5/', include('api_v5.urls')),
+
 
     url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
